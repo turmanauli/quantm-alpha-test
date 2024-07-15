@@ -27,7 +27,7 @@
 2. Once the service is launched, it will continue running in the background, unless interrupted from the terminal window, where ```python manage.py runserver``` has been called previously. The browser window can be closed without affecting the background service. 
 
 # Performance features:
-### Selective multi-layer caching
+### Selective multi-layered caching
 Data is cached / delayed by 15 minutes for non-authenticated users, by 5 minutes for authenticated users, and real-time data is provided only to Admins. 
 ### Selective serialization
-Serializers are optimized for specific API endpoint to ensure that only necessary data is requested from the database. 
+Serializers are optimized for specific API endpoint to ensure that only necessary data is accessed in the database. 
