@@ -16,3 +16,4 @@
 2. Access an URL / API endpoint for listing all the data and adding new entries ```http://127.0.0.1:8000/api/```
 3. Access an URL / API endpoint for modifying or deleting specific entry from the database: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integred from 1 to infinity
 4. Access an URL / API endpoint for listing data for specific tickers: ```http://127.0.0.1:8000/api/<ticker_symbol>```, from example: ```http://127.0.0.1:8000/api/BTCUSD```
+5. Access an URL / API endpoing for listing data for specific ticker & timeframe: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSD/15```, or ```http://127.0.0.1:8000/api/BTCUSD/5```, etc...
