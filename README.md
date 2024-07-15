@@ -30,4 +30,4 @@
 ### Selective multi-layered caching
 Data is cached / delayed by 15 minutes for non-authenticated users, by 5 minutes for authenticated users, and real-time data is provided only to Admins. 
 ### Selective serialization
-Serializers are optimized for specific API endpoint to ensure that only necessary data is accessed in the database. 
+Serializers are optimized for specific API endpoints to ensure that only necessary data is accessed in the database. 
