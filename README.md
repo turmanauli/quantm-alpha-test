@@ -11,12 +11,13 @@
 
 # Launch the API server and access it from the browser:
 1. Make sure you are in the ```quantmapi``` folder and you see ```manage.py``` file, if not, navigate to this directory and type: ```python manage.py runserver```. Again, you might need to use ```python3``` or ```py``` instead of ```python``` depending on your OS settings, whichever points to python version 3 should work. 
-2. List all DB Entries / Add New Entry: ```http://127.0.0.1:8000/api/```
-3. Update / Delete Specific DB Entry by Entry ID: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integer (index) of an enty (data row) in the database. 
-4. Instrument Ticker / Symbol Data: ```http://127.0.0.1:8000/api/<ticker_symbol>```, from example: ```http://127.0.0.1:8000/api/BTCUSDT```
-5. Intstrument Ticker / Symbol & Timeframe Data: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSDT/5```, ```http://127.0.0.1:8000/api/BTCUSDT/60``` or ```http://127.0.0.1:8000/api/ETHUSDT/1``` etc...
-6. RSI Endpoint: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/RSI```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/RSI```
-7. MACD Endpoints: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/MACD```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/MACD```
+2. OHLCV + MACD + RSI Endpoint: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSDT/5```, ```http://127.0.0.1:8000/api/BTCUSDT/60``` or ```http://127.0.0.1:8000/api/ETHUSDT/1``` etc...
+3. RSI Endpoint: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/RSI```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/RSI```
+4. MACD Endpoints: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/MACD```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/MACD```
+## Miscelaneous Endpoints:
+5. List all DB Entries / Add New Entry: ```http://127.0.0.1:8000/api/```
+6. Update / Delete Specific DB Entry by Entry ID: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integer (index) of an enty (data row) in the database. 
+7. Instrument Ticker / Symbol Data: ```http://127.0.0.1:8000/api/<ticker_symbol>```, from example: ```http://127.0.0.1:8000/api/BTCUSDT```
 
 
 # Launch the service:
