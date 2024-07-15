@@ -10,10 +10,12 @@
 1. Type ```pip install -r requirements.txt```, instead of ```pip```, you might need to use ```pip3```, depending on your OS environment settings, check both ```pip --version``` and ```pip3 --version``` and use one that points to pip xx.x.x (python 3.x).
 
 # Launch the API server and access it from the browser:
+### Run the server:
 1. Make sure you are in the ```quantmapi``` folder and you see ```manage.py``` file, if not, navigate to this directory and type: ```python manage.py runserver```. Again, you might need to use ```python3``` or ```py``` instead of ```python``` depending on your OS settings, whichever points to python version 3 should work. 
-2. OHLCV + MACD + RSI Endpoint: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSDT/5```, ```http://127.0.0.1:8000/api/BTCUSDT/60``` or ```http://127.0.0.1:8000/api/ETHUSDT/1``` etc...
-3. RSI Endpoint: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/RSI```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/RSI```
-4. MACD Endpoints: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/MACD```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/MACD```
+### Access API Endpoints:
+1. OHLCV + MACD + RSI Endpoint: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSDT/5```, ```http://127.0.0.1:8000/api/BTCUSDT/60``` or ```http://127.0.0.1:8000/api/ETHUSDT/1``` etc...
+2. RSI Endpoint: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/RSI```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/RSI```
+3. MACD Endpoints: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/MACD```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/MACD```
 ### Miscelaneous Endpoints:
 1. List all DB Entries / Add New Entry: ```http://127.0.0.1:8000/api/```
 2. Update / Delete Specific DB Entry by Entry ID: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integer (index) of an enty (data row) in the database. 
