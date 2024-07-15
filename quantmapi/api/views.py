@@ -4,7 +4,7 @@ from rest_framework import generics
 from .models import ChartData
 from .serializers import ChartDataSerializer
 from rest_framework.response import Response
-
+import pandas as pd
 
 # calculate the simple difference between the current price and the previous price
 def calculate_difference(current_price, previous_price):
@@ -21,39 +21,6 @@ def calculate_negative_change(diff):
     if diff < 0:
         return diff * -1
     return 0
-
-'''
-price_data = [
-    {'close': 4, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 5, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 6, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 6, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 7, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 4, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 6, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 8, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 9, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 10, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 9, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 11, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 9, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 13, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 14, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 12, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 11, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 10, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 12, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 13, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 14, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 15, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 16, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 14, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 12, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 10, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 7, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    {'close': 8, 'positive_changes': 0.0, 'negative_changes': 0.0, 'average_gain': 0.0, 'average_loss': 0.0, 'rsi': 0.0},
-    ]
-'''
 
 
 # populate RSI indicator values
@@ -90,8 +57,19 @@ def calculate_rsi(price_data, rsi_period = 14):
         
 
 
-def calculate_macd():
-    print('calculating_macd')
+def calculate_macd(price_data, fast_ema = 12, slow_ema = 26, remove_extra_columns = True):
+    df = pd.DataFrame(price_data)
+    df['ema_'+str(fast_ema)] = df['close'].ewm(span=fast_ema, adjust=False).mean()
+    df['ema_'+str(slow_ema)] = df['close'].ewm(span=slow_ema, adjust=False).mean()
+    df['macd'] = df['ema_'+str(fast_ema)] - df['ema_'+str(slow_ema)]
+    #json compliance
+    df = df.fillna(0.0)
+
+    if remove_extra_columns:
+        df = df.drop(['ema_'+str(fast_ema), 'ema_'+str(slow_ema), 'positive_changes', 'negative_changes', 'average_gain', 'average_loss'], axis=1)
+    return df.to_dict('records')
+
+
 
 
 class ChartDataListCreate(generics.ListCreateAPIView):
@@ -132,5 +110,6 @@ class ChartDataListTickerTimeframe(generics.ListAPIView):
         filtered_data = serializer.data
         
         rsi_added_data = calculate_rsi(filtered_data)
+        macd_added_data = calculate_macd(rsi_added_data)
     
-        return Response(rsi_added_data)
+        return Response(macd_added_data)
