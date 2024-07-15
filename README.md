@@ -11,7 +11,7 @@
 ### Installing the required packages:
 4. Type ```pip install -r requirements.txt```, instead of ```pip```, you might need to use ```pip3```, depending on your OS environment settings, check both ```pip --version``` and ```pip3 --version``` and use one that points to pip xx.x.x (python 3.x).
 
-## Launching the API web server and accessing from the browser:
+## Launching the API web server and accessing it from the browser:
 1. Make sure you are in the ```quantmapi``` folder and you see ```manage.py``` file, if not, navigate to this directory and type: ```python manage.py runserver```. Again, you might need to use ```python3``` or ```py``` instead of ```python``` depending on your OS settings, whichever points to python version 3 should work. 
 2. Access an URL / API endpoint for listing all the data and adding new entries ```http://127.0.0.1:8000/api/```
 3. Access an URL / API endpoint for modifying or deleting specific entry from the database: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integred from 1 to infinity
