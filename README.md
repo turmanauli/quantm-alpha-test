@@ -17,3 +17,8 @@
 3. Access an URL / API endpoint for modifying or deleting specific entry from the database: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integred from 1 to infinity
 4. Access an URL / API endpoint for listing data for specific tickers: ```http://127.0.0.1:8000/api/<ticker_symbol>```, from example: ```http://127.0.0.1:8000/api/BTCUSD```
 5. Access an URL / API endpoing for listing data for specific ticker & timeframe: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSD/15```, or ```http://127.0.0.1:8000/api/BTCUSD/5```, etc...
+
+
+## Launching the service:
+1. In order to launch the service in the background, just access the URL via browser or command line: ```http://127.0.0.1:8000/service/?ticker=<instrument_symbol>&interval=<interval_in_minutes>```, where ```<instrument_symbol>``` is ```BTCUSDT```, ```ETHUSDT```, ```LTCUSDT``` and so on... and ```<interval_in_minutes>``` is time as an integer number indicating candle time interval in minutes, could be one of 3 values: 1, 5, or 60 for 1 minute, 5 minutes, or 1 hour respectively. 
+2. Once the service is launched, it will continue running in the background, unless interrupted from the terminal window, where ```python manage.py runserver``` has been called previously. 
