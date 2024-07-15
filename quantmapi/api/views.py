@@ -2,7 +2,7 @@ from urllib import request, response
 from django.shortcuts import render
 from rest_framework import generics
 from .models import ChartData
-from .serializers import ChartDataSerializer
+from .serializers import ChartDataSerializer, ChartIndicatorSerializer
 from rest_framework.response import Response
 import pandas as pd
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -144,7 +144,7 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
     def get(self, request, ticker, timeframe, indicator):
         if self.request.user.is_superuser:
             queryset = self.get_queryset()
-            serializer = ChartDataSerializer(queryset, many=True)
+            serializer = ChartIndicatorSerializer(queryset, many=True)
             if indicator.lower() == 'rsi':
                 rsi_added_data = calculate_rsi(serializer.data)
                 df = pd.DataFrame(rsi_added_data)
@@ -154,22 +154,14 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
                     'negative_changes', 
                     'average_gain', 
                     'average_loss',
-                    'open',
-                    'high',
-                    'low',
                     'close',
-                    'volume',
                     'macd',
                     ], axis=1)
                 return Response(df.to_dict('records'))       
             elif indicator.lower() == 'macd':
                 macd_added_data = calculate_macd(serializer.data, 12, 26, False, True)
                 df = macd_added_data.drop([
-                    'open',
-                    'high',
-                    'low',
                     'close',
-                    'volume',
                     'rsi',
                     'ema_'+str(12), 
                     'ema_'+str(26),
@@ -182,7 +174,7 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
                     return Response(cache.get(cache_store))
                 else:
                     queryset = self.get_queryset()
-                    serializer = ChartDataSerializer(queryset, many=True)
+                    serializer = ChartIndicatorSerializer(queryset, many=True)
                     rsi_added_data = calculate_rsi(serializer.data)
                     df = pd.DataFrame(rsi_added_data)
                     df = df.fillna(0.0)
@@ -191,11 +183,7 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
                         'negative_changes', 
                         'average_gain', 
                         'average_loss',
-                        'open',
-                        'high',
-                        'low',
                         'close',
-                        'volume',
                         'macd',
                         ], axis=1)
                     final_data = df.to_dict('records')
@@ -208,14 +196,10 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
                     return Response(cache.get(cache_store))
                 else:
                     queryset = self.get_queryset()
-                    serializer = ChartDataSerializer(queryset, many=True)
+                    serializer = ChartIndicatorSerializer(queryset, many=True)
                     macd_added_data = calculate_macd(serializer.data, 12, 26, False, True)
                     df = macd_added_data.drop([
-                        'open',
-                        'high',
-                        'low',
                         'close',
-                        'volume',
                         'rsi',
                         'ema_'+str(12), 
                         'ema_'+str(26),
