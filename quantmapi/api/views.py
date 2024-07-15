@@ -19,8 +19,6 @@ class ChartDataRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
 # list entries by ticker
 class ChartDataListTicker(generics.GenericAPIView):
-    queryset = ChartData.objects.all()
-    serializer_class = ChartDataSerializer
 
     def get_queryset(self):
         ticker = self.kwargs['ticker']
@@ -34,8 +32,6 @@ class ChartDataListTicker(generics.GenericAPIView):
 
 # list entries by ticker and timeframe
 class ChartDataListTickerTimeframe(generics.ListAPIView):
-    queryset = ChartData.objects.all()
-    serializer_class = ChartDataSerializer
     
     def get_queryset(self):
         ticker = self.kwargs['ticker']

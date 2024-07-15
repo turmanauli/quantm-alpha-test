@@ -13,10 +13,10 @@
 
 ## Launching the API web server and accessing it from the browser:
 1. Make sure you are in the ```quantmapi``` folder and you see ```manage.py``` file, if not, navigate to this directory and type: ```python manage.py runserver```. Again, you might need to use ```python3``` or ```py``` instead of ```python``` depending on your OS settings, whichever points to python version 3 should work. 
-2. Access an URL / API endpoint for listing all the data and adding new entries ```http://127.0.0.1:8000/api/```
-3. Access an URL / API endpoint for modifying or deleting specific entry from the database: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integred from 1 to infinity
-4. Access an URL / API endpoint for listing data for specific tickers: ```http://127.0.0.1:8000/api/<ticker_symbol>```, from example: ```http://127.0.0.1:8000/api/BTCUSD```
-5. Access an URL / API endpoing for listing data for specific ticker & timeframe: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSD/15```, or ```http://127.0.0.1:8000/api/BTCUSD/5```, etc...
+2. List all DB Entries / Add New Entry: ```http://127.0.0.1:8000/api/```
+3. Update / Delete Specific DB Entry by Entry ID: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integred from 1 to infinity
+4. Instrument Ticker / Symbol Data: ```http://127.0.0.1:8000/api/<ticker_symbol>```, from example: ```http://127.0.0.1:8000/api/BTCUSD```
+5. Intstrument Ticker / Symbol & Timeframe Data: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSD/15```, or ```http://127.0.0.1:8000/api/BTCUSD/5```, etc...
 
 
 ## Launching the service:
