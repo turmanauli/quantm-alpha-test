@@ -23,7 +23,7 @@ def calculate_negative_change(diff):
     return 0
 
 
-# populate RSI indicator values
+# populate and return price data with RSI values
 def calculate_rsi(price_data, rsi_period = 14):
     
     for i in range(len(price_data)):
@@ -56,15 +56,15 @@ def calculate_rsi(price_data, rsi_period = 14):
 
         
 
-
-def calculate_macd(price_data, fast_ema = 12, slow_ema = 26, remove_extra_columns = True):
+# populate and return price data with MACD values
+def calculate_macd(price_data, fast_ema = 12, slow_ema = 26, remove_extra_columns = True, return_raw = False):
     df = pd.DataFrame(price_data)
     df['ema_'+str(fast_ema)] = df['close'].ewm(span=fast_ema, adjust=False).mean()
     df['ema_'+str(slow_ema)] = df['close'].ewm(span=slow_ema, adjust=False).mean()
     df['macd'] = df['ema_'+str(fast_ema)] - df['ema_'+str(slow_ema)]
-    #json compliance
     df = df.fillna(0.0)
-
+    if return_raw:
+        return df
     if remove_extra_columns:
         df = df.drop(['ema_'+str(fast_ema), 'ema_'+str(slow_ema), 'positive_changes', 'negative_changes', 'average_gain', 'average_loss'], axis=1)
     return df.to_dict('records')
@@ -113,3 +113,50 @@ class ChartDataListTickerTimeframe(generics.ListAPIView):
         macd_added_data = calculate_macd(rsi_added_data)
     
         return Response(macd_added_data)
+    
+
+# list Indicator Values by ticker and timeframe
+class ChartDataListTickerIndicator(generics.ListAPIView):
+    
+    def get_queryset(self):
+        ticker = self.kwargs['ticker']
+        timeframe = self.kwargs['timeframe']
+        return ChartData.objects.filter(ticker=ticker, timeframe=timeframe)
+
+    def get(self, request, ticker, timeframe, indicator):
+        queryset = self.get_queryset()
+        serializer = ChartDataSerializer(queryset, many=True)
+        
+        if indicator.lower() == 'rsi':
+            rsi_added_data = calculate_rsi(serializer.data)
+            df = pd.DataFrame(rsi_added_data)
+            df = df.fillna(0.0)
+            df = df.drop([
+                'positive_changes', 
+                'negative_changes', 
+                'average_gain', 
+                'average_loss',
+                'open',
+                'high',
+                'low',
+                'close',
+                'volume',
+                'macd',
+                ], axis=1)
+            return Response(df.to_dict('records'))
+        
+        elif indicator.lower() == 'macd':
+            macd_added_data = calculate_macd(serializer.data, 12, 26, False, True)
+            df = macd_added_data.drop([
+                'open',
+                'high',
+                'low',
+                'close',
+                'volume',
+                'rsi',
+                'ema_'+str(12), 
+                'ema_'+str(26),
+                ], axis=1)
+            return Response(df.to_dict('records'))
+    
+        return Response(serializer.data)

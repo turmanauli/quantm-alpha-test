@@ -15,6 +15,8 @@
 3. Update / Delete Specific DB Entry by Entry ID: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integer (index) of an enty (data row) in the database. 
 4. Instrument Ticker / Symbol Data: ```http://127.0.0.1:8000/api/<ticker_symbol>```, from example: ```http://127.0.0.1:8000/api/BTCUSDT```
 5. Intstrument Ticker / Symbol & Timeframe Data: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSDT/5```, ```http://127.0.0.1:8000/api/BTCUSDT/60``` or ```http://127.0.0.1:8000/api/ETHUSDT/1``` etc...
+6. RSI Endpoint: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/RSI```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/RSI```
+7. MACD Endpoints: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>/MACD```, for example ```http://127.0.0.1:8000/api/ETHUSDT/5/MACD```
 
 
 # Launch the service:
