@@ -5,6 +5,8 @@ from .models import ChartData
 from .serializers import ChartDataSerializer
 from rest_framework.response import Response
 import pandas as pd
+from rest_framework.permissions import IsAuthenticated
+from django.core.cache import cache
 
 # calculate the simple difference between the current price and the previous price
 def calculate_difference(current_price, previous_price):
@@ -71,20 +73,23 @@ def calculate_macd(price_data, fast_ema = 12, slow_ema = 26, remove_extra_column
 
 
 
-
+# authenticated users only
 class ChartDataListCreate(generics.ListCreateAPIView):
     queryset = ChartData.objects.all()
     serializer_class = ChartDataSerializer
+    permission_classes = [IsAuthenticated]
 
-# display and modify/delete entry by entry id
+# display and modify/delete entry by entry id, authenticated users only
 class ChartDataRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChartData.objects.all()
     serializer_class = ChartDataSerializer
     lookup_field = 'pk'
+    permission_classes = [IsAuthenticated]
 
 
-# list entries by ticker
+# list entries by ticker, authenticated users only
 class ChartDataListTicker(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         ticker = self.kwargs['ticker']
@@ -96,7 +101,7 @@ class ChartDataListTicker(generics.GenericAPIView):
         return Response(serializer.data)
 
 
-# list entries by ticker and timeframe
+# list entries by ticker and timeframe, 5 minute delay for non-authenticated users
 class ChartDataListTickerTimeframe(generics.ListAPIView):
     
     def get_queryset(self):
@@ -105,14 +110,27 @@ class ChartDataListTickerTimeframe(generics.ListAPIView):
         return ChartData.objects.filter(ticker=ticker, timeframe=timeframe)
 
     def get(self, request, ticker, timeframe):
-        queryset = self.get_queryset()
-        serializer = ChartDataSerializer(queryset, many=True)
-        filtered_data = serializer.data
-        
-        rsi_added_data = calculate_rsi(filtered_data)
-        macd_added_data = calculate_macd(rsi_added_data)
-    
-        return Response(macd_added_data)
+        if self.request.user.is_authenticated:
+            queryset = self.get_queryset()
+            serializer = ChartDataSerializer(queryset, many=True)
+            filtered_data = serializer.data
+            
+            rsi_added_data = calculate_rsi(filtered_data)
+            rsi_macd_added_data = calculate_macd(rsi_added_data)
+            return Response(rsi_macd_added_data)
+        else:
+            cache_store = ticker + '_' + str(timeframe) + '_rsi_macd_added_data'
+            if cache_store in cache:
+                return Response(cache.get(cache_store))
+            else:
+                queryset = self.get_queryset()
+                serializer = ChartDataSerializer(queryset, many=True)
+                filtered_data = serializer.data
+                
+                rsi_added_data = calculate_rsi(filtered_data)
+                rsi_macd_added_data = calculate_macd(rsi_added_data)
+                cache.set(cache_store, rsi_macd_added_data, timeout=300)
+                return Response(rsi_macd_added_data)
     
 
 # list Indicator Values by ticker and timeframe
@@ -124,39 +142,85 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
         return ChartData.objects.filter(ticker=ticker, timeframe=timeframe)
 
     def get(self, request, ticker, timeframe, indicator):
-        queryset = self.get_queryset()
-        serializer = ChartDataSerializer(queryset, many=True)
-        
-        if indicator.lower() == 'rsi':
-            rsi_added_data = calculate_rsi(serializer.data)
-            df = pd.DataFrame(rsi_added_data)
-            df = df.fillna(0.0)
-            df = df.drop([
-                'positive_changes', 
-                'negative_changes', 
-                'average_gain', 
-                'average_loss',
-                'open',
-                'high',
-                'low',
-                'close',
-                'volume',
-                'macd',
-                ], axis=1)
-            return Response(df.to_dict('records'))
-        
-        elif indicator.lower() == 'macd':
-            macd_added_data = calculate_macd(serializer.data, 12, 26, False, True)
-            df = macd_added_data.drop([
-                'open',
-                'high',
-                'low',
-                'close',
-                'volume',
-                'rsi',
-                'ema_'+str(12), 
-                'ema_'+str(26),
-                ], axis=1)
-            return Response(df.to_dict('records'))
-    
-        return Response(serializer.data)
+        if self.request.user.is_authenticated:
+            queryset = self.get_queryset()
+            serializer = ChartDataSerializer(queryset, many=True)
+            if indicator.lower() == 'rsi':
+                rsi_added_data = calculate_rsi(serializer.data)
+                df = pd.DataFrame(rsi_added_data)
+                df = df.fillna(0.0)
+                df = df.drop([
+                    'positive_changes', 
+                    'negative_changes', 
+                    'average_gain', 
+                    'average_loss',
+                    'open',
+                    'high',
+                    'low',
+                    'close',
+                    'volume',
+                    'macd',
+                    ], axis=1)
+                return Response(df.to_dict('records'))       
+            elif indicator.lower() == 'macd':
+                macd_added_data = calculate_macd(serializer.data, 12, 26, False, True)
+                df = macd_added_data.drop([
+                    'open',
+                    'high',
+                    'low',
+                    'close',
+                    'volume',
+                    'rsi',
+                    'ema_'+str(12), 
+                    'ema_'+str(26),
+                    ], axis=1)
+                return Response(df.to_dict('records'))
+        else:
+            if indicator.lower() == 'rsi':
+                cache_store = ticker + '_' + str(timeframe) + '_rsi_data'
+                if cache_store in cache:
+                    return Response(cache.get(cache_store))
+                else:
+                    queryset = self.get_queryset()
+                    serializer = ChartDataSerializer(queryset, many=True)
+                    rsi_added_data = calculate_rsi(serializer.data)
+                    df = pd.DataFrame(rsi_added_data)
+                    df = df.fillna(0.0)
+                    df = df.drop([
+                        'positive_changes', 
+                        'negative_changes', 
+                        'average_gain', 
+                        'average_loss',
+                        'open',
+                        'high',
+                        'low',
+                        'close',
+                        'volume',
+                        'macd',
+                        ], axis=1)
+                    final_data = df.to_dict('records')
+                    cache.set(cache_store, final_data, timeout=300)
+                    return Response(final_data)
+            
+            elif indicator.lower() == 'macd':
+                cache_store = ticker + '_' + str(timeframe) + '_macd_data'
+                if cache_store in cache:
+                    return Response(cache.get(cache_store))
+                else:
+                    queryset = self.get_queryset()
+                    serializer = ChartDataSerializer(queryset, many=True)
+                    macd_added_data = calculate_macd(serializer.data, 12, 26, False, True)
+                    df = macd_added_data.drop([
+                        'open',
+                        'high',
+                        'low',
+                        'close',
+                        'volume',
+                        'rsi',
+                        'ema_'+str(12), 
+                        'ema_'+str(26),
+                        ], axis=1)
+                    final_data = df.to_dict('records')
+                    cache.set(cache_store, final_data, timeout=300)
+                    return Response(final_data)
+            
