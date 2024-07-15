@@ -7,11 +7,11 @@ class ChartData(models.Model):
     high = models.FloatField()
     low = models.FloatField()
     close = models.FloatField()
-    volume = models.IntegerField()
-    rsi = models.FloatField()
-    macd = models.FloatField()
+    volume = models.FloatField()
+    rsi = models.FloatField(null=True)
+    macd = models.FloatField(null=True)
     timeframe = models.IntegerField()
-    date = models.DateTimeField()
+    date = models.IntegerField()
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
