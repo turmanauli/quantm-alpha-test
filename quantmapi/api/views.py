@@ -9,6 +9,12 @@ class ChartDataListCreate(generics.ListCreateAPIView):
     serializer_class = ChartDataSerializer
 
 
+class ChartDataListCreate(generics.ListCreateAPIView):
+    queryset = ChartData.objects.all()
+    serializer_class = ChartDataSerializer
+    lookup_field = 'ticker'
+
+
 class ChartDataRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChartData.objects.all()
     serializer_class = ChartDataSerializer
