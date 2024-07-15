@@ -1,4 +1,4 @@
-# quantm-alpha-test
+# quantm-alpha test task
 
 ## Setup and launch the project
 ### Installing and using the virtual environment for python is optional but recommended, to install, type: 
