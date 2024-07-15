@@ -5,7 +5,7 @@ from .models import ChartData
 from .serializers import ChartDataSerializer
 from rest_framework.response import Response
 import pandas as pd
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.core.cache import cache
 
 # calculate the simple difference between the current price and the previous price
@@ -73,23 +73,23 @@ def calculate_macd(price_data, fast_ema = 12, slow_ema = 26, remove_extra_column
 
 
 
-# authenticated users only
+# Admin users only
 class ChartDataListCreate(generics.ListCreateAPIView):
     queryset = ChartData.objects.all()
     serializer_class = ChartDataSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
-# display and modify/delete entry by entry id, authenticated users only
+# display and modify/delete entry by entry id, admin users only
 class ChartDataRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChartData.objects.all()
     serializer_class = ChartDataSerializer
     lookup_field = 'pk'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
 
-# list entries by ticker, authenticated users only
+# list entries by ticker, admin users only
 class ChartDataListTicker(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
 
     def get_queryset(self):
         ticker = self.kwargs['ticker']
@@ -110,7 +110,7 @@ class ChartDataListTickerTimeframe(generics.ListAPIView):
         return ChartData.objects.filter(ticker=ticker, timeframe=timeframe)
 
     def get(self, request, ticker, timeframe):
-        if self.request.user.is_authenticated:
+        if self.request.user.is_superuser:
             queryset = self.get_queryset()
             serializer = ChartDataSerializer(queryset, many=True)
             filtered_data = serializer.data
@@ -129,7 +129,7 @@ class ChartDataListTickerTimeframe(generics.ListAPIView):
                 
                 rsi_added_data = calculate_rsi(filtered_data)
                 rsi_macd_added_data = calculate_macd(rsi_added_data)
-                cache.set(cache_store, rsi_macd_added_data, timeout=300)
+                cache.set(cache_store, rsi_macd_added_data, timeout=300 if self.request.user.is_authenticated else 1500)
                 return Response(rsi_macd_added_data)
     
 
@@ -142,7 +142,7 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
         return ChartData.objects.filter(ticker=ticker, timeframe=timeframe)
 
     def get(self, request, ticker, timeframe, indicator):
-        if self.request.user.is_authenticated:
+        if self.request.user.is_superuser:
             queryset = self.get_queryset()
             serializer = ChartDataSerializer(queryset, many=True)
             if indicator.lower() == 'rsi':
@@ -199,7 +199,7 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
                         'macd',
                         ], axis=1)
                     final_data = df.to_dict('records')
-                    cache.set(cache_store, final_data, timeout=300)
+                    cache.set(cache_store, final_data, timeout=300 if self.request.user.is_authenticated else 1500)
                     return Response(final_data)
             
             elif indicator.lower() == 'macd':
@@ -221,6 +221,6 @@ class ChartDataListTickerIndicator(generics.ListAPIView):
                         'ema_'+str(26),
                         ], axis=1)
                     final_data = df.to_dict('records')
-                    cache.set(cache_store, final_data, timeout=300)
+                    cache.set(cache_store, final_data, timeout=300 if self.request.user.is_authenticated else 1500)
                     return Response(final_data)
             
