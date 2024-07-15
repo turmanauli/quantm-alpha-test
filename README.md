@@ -1,6 +1,6 @@
 # Setup the project
 ### Installing and using the virtual environment for python is optional but recommended, to install, type: 
-1. ```python -m venv ./path/for/venv/installation``` OR ```python -m venv c:\path\for\venv\installation``` in Powershell (using just the ```venv``` folder as installation path is easier though), instead of ```python```, you might need to use ```python3```, or ```py```, depending on your OS environment settings, check by typing ```python --version```, ```python3 --version```, and ```py --version``` and use one that points to python version 3. 
+1. ```python -m venv ./path/for/venv/installation``` OR ```python -m venv .\path\for\venv\installation``` in PowerShell. (using just the ```./venv``` ( or ```.\venv``` in PowerShell ) folder is good enough). Instead of ```python```, you might need to use ```python3```, or ```py```, depending on your OS environment settings, check by typing ```python --version```, ```python3 --version```, and ```py --version``` and use one that points to python version 3. 
 
 ### Activate venv (from the project directory / parent directory of venv folder):
 2. Type ```venv\Scripts\Activate``` in Powershell for activation, and type ```deactivate``` directly to deactivate it.
