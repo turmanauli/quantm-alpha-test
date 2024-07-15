@@ -16,7 +16,7 @@
 2. List all DB Entries / Add New Entry: ```http://127.0.0.1:8000/api/```
 3. Update / Delete Specific DB Entry by Entry ID: ```http://127.0.0.1:8000/api/<entry_id_number>```, where the ```<entry_id_number>``` is an integred from 1 to infinity
 4. Instrument Ticker / Symbol Data: ```http://127.0.0.1:8000/api/<ticker_symbol>```, from example: ```http://127.0.0.1:8000/api/BTCUSDT```
-5. Intstrument Ticker / Symbol & Timeframe Data: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSDT/15```, ```http://127.0.0.1:8000/api/BTCUSDT/5```, ```http://127.0.0.1:8000/api/BTCUSDT/60``` or ```http://127.0.0.1:8000/api/ETHUSDT/1``` etc...
+5. Intstrument Ticker / Symbol & Timeframe Data: ```http://127.0.0.1:8000/api/<ticker_symbol>/<timeframe_in_minutes>```, for example: ```http://127.0.0.1:8000/api/BTCUSDT/5```, ```http://127.0.0.1:8000/api/BTCUSDT/60``` or ```http://127.0.0.1:8000/api/ETHUSDT/1``` etc...
 
 
 ## Launching the service:
