@@ -24,7 +24,7 @@
 
 # Launch the service:
 1. In order to launch the service in the background, just access the URL via browser or command line: ```http://127.0.0.1:8000/service/?ticker=<ticker_symbol>&interval=<interval_in_minutes>```, where ```<ticker_symbol>``` is ```BTCUSDT```, ```ETHUSDT```, ```LTCUSDT``` and so on... and ```<interval_in_minutes>``` is time as an integer number indicating candle time interval in minutes, could be one of 3 values: 1, 5, or 60 for 1 minute, 5 minutes, or 1 hour respectively. For example: ```http://127.0.0.1:8000/service/?ticker=ETHUSDT&interval=1```
-2. Once the service is launched, it will continue running in the background, unless interrupted from the terminal window, where ```python manage.py runserver``` has been called previously. The browser window can be closed without affecting the background service. 
+2. Once the service is launched, it will continue running in the background, activity can be monitored in the terminal window. The browser window can be closed without affecting the background service. Service can be interrupted from the terminal window (where ```python manage.py runserver``` has been called previously). 
 
 # Performance features:
 ### Selective multi-layered caching
